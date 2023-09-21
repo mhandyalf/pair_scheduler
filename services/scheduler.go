@@ -10,7 +10,6 @@ import (
 )
 
 func StartScheduler() {
-
 	c := cron.New()
 
 	_, err := c.AddFunc("*/5 * * * *", func() {
@@ -29,7 +28,6 @@ func StartScheduler() {
 	c.Start()
 
 	//Select {}
-
 }
 
 func DeleteHistory() error {

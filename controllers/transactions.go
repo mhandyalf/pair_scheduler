@@ -18,7 +18,6 @@ func CreateTransaction(c echo.Context) error {
 	}
 
 	result, err := config.Collection.InsertOne(context.Background(), transaction)
-
 	if err != nil {
 		return c.JSON(400, err)
 	}
@@ -27,16 +26,14 @@ func CreateTransaction(c echo.Context) error {
 
 }
 
-func GetAllTransactions(c echo.Context) error {
+func GetAllTransaction(c echo.Context) error {
 	result, err := config.Collection.Find(context.Background(), bson.M{})
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
-
 	defer result.Close(context.Background())
 
 	var transactions []models.Transaction
-
 	for result.Next(context.Background()) {
 		var t models.Transaction
 		if err := result.Decode(&t); err != nil {
@@ -55,11 +52,8 @@ func GetTransaction(c echo.Context) error {
 	}
 
 	filter := bson.M{"_id": id}
-
 	var t models.Transaction
-
 	err = config.Collection.FindOne(context.Background(), filter).Decode(&t)
-
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
@@ -80,7 +74,6 @@ func UpdateTransaction(c echo.Context) error {
 	}
 
 	filter := bson.M{"_id": id}
-
 	update := bson.M{
 		"$set": bson.M{
 			"description": transaction.Description,
@@ -89,7 +82,6 @@ func UpdateTransaction(c echo.Context) error {
 	}
 
 	_, err = config.Collection.UpdateOne(context.Background(), filter, update)
-
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
@@ -97,14 +89,13 @@ func UpdateTransaction(c echo.Context) error {
 	return c.JSON(http.StatusOK, "Transaction updated")
 }
 
-func DeleteByID(c echo.Context) error {
+func DeleteTransaction(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err)
 	}
 
 	filter := bson.M{"_id": id}
-
 	_, err = config.Collection.DeleteOne(context.Background(), filter)
 
 	if err != nil {
